@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InvestCore — Your Complete Investment Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111419;
+    --surface2: #181c24;
+    --border: #1f2633;
+    --accent: #00e5a0;
+    --accent2: #3b82f6;
+    --accent3: #f59e0b;
+    --danger: #ef4444;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --muted2: #374151;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 64px;
+    background: rgba(10,12,16,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    display: flex; gap: 0.75rem; align-items: center;
+  }
+  .btn-ghost {
+    padding: 0.5rem 1rem; border: 1px solid var(--border);
+    background: transparent; color: var(--text); font-family: 'Syne', sans-serif;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+    cursor: pointer; border-radius: 6px; transition: all 0.2s; text-decoration: none;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-accent {
+    padding: 0.5rem 1.25rem; background: var(--accent);
+    color: #0a0c10; font-family: 'Syne', sans-serif;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em;
+    cursor: pointer; border-radius: 6px; border: none; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-accent:hover { background: #00c98a; transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; padding: 7rem 2.5rem 5rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center; max-width: 1280px; margin: 0 auto;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    color: var(--accent); background: rgba(0,229,160,0.08);
+    border: 1px solid rgba(0,229,160,0.2);
+    padding: 0.3rem 0.75rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero-tag .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05; letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1rem; color: var(--muted); line-height: 1.7;
+    max-width: 440px; margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-large {
+    padding: 0.9rem 2rem; font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 0.04em; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    font-family: 'Syne', sans-serif; text-decoration: none; border: none;
+  }
+  .btn-large.accent { background: var(--accent); color: #0a0c10; }
+  .btn-large.accent:hover { background: #00c98a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,160,0.3); }
+  .btn-large.ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-large.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ─── HERO STATS ─── */
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .stat-card {
+    background: var(--surface); padding: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .stat-card:nth-child(4) { animation-delay: 0.4s; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem; color: var(--accent); line-height: 1; margin-bottom: 0.4rem;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ─── MINI CHART ─── */
+  .mini-chart {
+    width: 100%; height: 180px;
+    background: var(--surface2); border-radius: 12px;
+    border: 1px solid var(--border); overflow: hidden; margin-bottom: 1px;
+    position: relative; display: flex; align-items: flex-end; padding: 0 0 0 0;
+  }
+  .chart-svg { width: 100%; height: 100%; }
+
+  /* ─── SECTION ─── */
+  section { padding: 5rem 2.5rem; max-width: 1280px; margin: 0 auto; }
+  .section-label {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.75rem;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1rem;
+  }
+  .section-desc { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 600px; margin-bottom: 3rem; }
+
+  /* ─── FEATURES GRID ─── */
+  .features-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--border); border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .feature-card {
+    background: var(--surface); padding: 2rem;
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,160,0.04), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .feature-card:hover { background: var(--surface2); }
+  .feature-card:hover::after { opacity: 1; }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 1.25rem;
+  }
+  .feature-icon.green { background: rgba(0,229,160,0.1); }
+  .feature-icon.blue { background: rgba(59,130,246,0.1); }
+  .feature-icon.amber { background: rgba(245,158,11,0.1); }
+  .feature-icon.purple { background: rgba(168,85,247,0.1); }
+  .feature-icon.red { background: rgba(239,68,68,0.1); }
+  .feature-icon.teal { background: rgba(20,184,166,0.1); }
+  .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .feature-tag {
+    display: inline-block; margin-top: 1rem;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    padding: 0.2rem 0.5rem; border-radius: 4px; letter-spacing: 0.08em;
+  }
+  .feature-tag.scrab { background: rgba(0,229,160,0.1); color: var(--accent); }
+  .feature-tag.myfund { background: rgba(59,130,246,0.1); color: var(--accent2); }
+  .feature-tag.both { background: rgba(245,158,11,0.1); color: var(--accent3); }
+
+  /* ─── LIVE DASHBOARD ─── */
+  .dashboard-demo {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; margin-top: 3rem;
+  }
+  .dash-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .dash-title { font-size: 0.85rem; font-weight: 700; }
+  .dash-actions { display: flex; gap: 0.5rem; }
+  .dash-btn {
+    padding: 0.3rem 0.75rem; font-size: 0.72rem; font-weight: 600;
+    border-radius: 5px; cursor: pointer; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); font-family: 'Syne', sans-serif;
+    transition: all 0.2s;
+  }
+  .dash-btn.active, .dash-btn:hover { background: var(--accent); color: #0a0c10; border-color: var(--accent); }
+
+  .dash-body { display: grid; grid-template-columns: 280px 1fr; }
+  .dash-sidebar { border-right: 1px solid var(--border); padding: 1.5rem; }
+  .portfolio-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem; border-radius: 8px; cursor: pointer;
+    transition: background 0.2s; margin-bottom: 0.25rem;
+  }
+  .portfolio-item:hover, .portfolio-item.active { background: var(--surface2); }
+  .portfolio-item .p-name { font-size: 0.82rem; font-weight: 600; }
+  .portfolio-item .p-val { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+  .portfolio-item .p-change { font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+  .positive { color: var(--accent); }
+  .negative { color: var(--danger); }
+
+  .dash-main { padding: 1.5rem; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .kpi {
+    background: var(--surface2); border-radius: 10px; padding: 1rem;
+    border: 1px solid var(--border);
+  }
+  .kpi-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.4rem; }
+  .kpi-value { font-family: 'DM Mono', monospace; font-size: 1.2rem; font-weight: 500; }
+  .kpi-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .holdings-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .holdings-table th {
+    text-align: left; font-size: 0.65rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);
+  }
+  .holdings-table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid rgba(31,38,51,0.6); }
+  .holdings-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .ticker-badge {
+    display: inline-block; padding: 0.15rem 0.45rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500;
+  }
+  .score-bar-wrap { display: flex; align-items: center; gap: 0.75rem; }
+  .score-bar {
+    flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .score-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+  .score-val { font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500; width: 28px; text-align: right; }
+
+  /* ─── SCREENER ─── */
+  .screener-demo {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+  }
+  .screener-filters {
+    display: flex; gap: 0.75rem; padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border); background: var(--surface2);
+    flex-wrap: wrap;
+  }
+  .filter-chip {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.35rem 0.75rem; border-radius: 100px;
+    border: 1px solid var(--border); background: var(--surface);
+    font-size: 0.73rem; cursor: pointer; transition: all 0.2s; color: var(--text);
+  }
+  .filter-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,160,0.06); }
+  .filter-chip:hover { border-color: var(--muted); }
+
+  .screener-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .screener-table th {
+    text-align: left; padding: 0.6rem 1rem; font-size: 0.63rem;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  .screener-table td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(31,38,51,0.5); }
+  .screener-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .score-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 22px; border-radius: 4px;
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 600;
+  }
+  .score-pill.high { background: rgba(0,229,160,0.15); color: var(--accent); }
+  .score-pill.mid { background: rgba(245,158,11,0.15); color: var(--accent3); }
+  .score-pill.low { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .flag { font-size: 0.9rem; }
+
+  /* ─── STRATEGIES ─── */
+  .strategies-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .strategy-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem; transition: all 0.3s; cursor: pointer;
+  }
+  .strategy-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+  .strategy-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .strategy-name { font-size: 0.95rem; font-weight: 700; }
+  .strategy-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    padding: 0.2rem 0.5rem; border-radius: 4px; letter-spacing: 0.06em;
+  }
+  .strategy-badge.trend { background: rgba(59,130,246,0.1); color: var(--accent2); }
+  .strategy-badge.momentum { background: rgba(168,85,247,0.1); color: #a855f7; }
+  .strategy-badge.value { background: rgba(0,229,160,0.1); color: var(--accent); }
+  .strategy-badge.mixed { background: rgba(245,158,11,0.1); color: var(--accent3); }
+  .strategy-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+  .strategy-stats { display: flex; gap: 1.5rem; }
+  .s-stat-num { font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 500; }
+  .s-stat-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ─── TAX ─── */
+  .tax-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; display: grid;
+    grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+  }
+  .tax-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-group label { display: block; font-size: 0.73rem; color: var(--muted); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.07em; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 0.6rem 0.9rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 7px; color: var(--text); font-family: 'DM Mono', monospace;
+    font-size: 0.85rem; transition: border 0.2s; outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface2); }
+  .tax-result {
+    background: var(--surface2); border-radius: 12px; padding: 1.5rem;
+    border: 1px solid var(--border);
+  }
+  .tax-result-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  .tax-result-row:last-child { border-bottom: none; font-weight: 700; }
+  .tax-result-row .label { font-size: 0.8rem; color: var(--muted); }
+  .tax-result-row .value { font-family: 'DM Mono', monospace; font-size: 0.85rem; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .testimonial {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+  }
+  .testimonial-text { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; font-style: italic; }
+  .testimonial-author { font-size: 0.8rem; font-weight: 700; }
+  .stars { color: var(--accent3); font-size: 0.75rem; margin-bottom: 0.75rem; }
+
+  /* ─── PRICING ─── */
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+  .pricing-card { background: var(--surface); padding: 2rem; }
+  .pricing-card.featured { background: #0f1e17; }
+  .plan-name { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .plan-price {
+    font-family: 'DM Serif Display', serif; font-size: 2.5rem;
+    color: var(--text); line-height: 1; margin-bottom: 0.25rem;
+  }
+  .plan-price span { font-family: 'Syne', sans-serif; font-size: 1rem; color: var(--muted); }
+  .plan-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.5; }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
+  .plan-features li { font-size: 0.8rem; display: flex; align-items: flex-start; gap: 0.5rem; color: var(--muted); }
+  .plan-features li .check { color: var(--accent); flex-shrink: 0; }
+  .plan-features li.dim { opacity: 0.4; }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    margin: 0 2.5rem 5rem;
+    background: linear-gradient(135deg, rgba(0,229,160,0.08) 0%, rgba(59,130,246,0.08) 100%);
+    border: 1px solid rgba(0,229,160,0.15);
+    border-radius: 20px; padding: 4rem; text-align: center;
+  }
+  .cta-section h2 { margin-bottom: 1rem; }
+  .cta-section p { color: var(--muted); margin-bottom: 2rem; }
+  .cta-actions { display: flex; justify-content: center; gap: 1rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border); padding: 2rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--muted); font-size: 0.75rem;
+  }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ─── DIVIDER ─── */
+  .section-sep {
+    width: 100%; height: 1px; background: var(--border); margin: 0 2.5rem;
+    max-width: calc(1280px); align-self: center;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .dash-body { grid-template-columns: 1fr; }
+    .dash-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .strategies-grid { grid-template-columns: 1fr; }
+    .tax-card { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .hero { padding: 4rem 1rem 3rem; }
+    section { padding: 3rem 1rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .cta-section { padding: 2.5rem 1.5rem; margin: 0 1rem 3rem; }
+  }
+
+  /* ─── ANIMATE ─── */
+  .animate-in {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .animate-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Invest<span>Core</span></div>
+  <div class="nav-links">
+    <a href="#screener">Screener</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#strategies">Strategies</a>
+    <a href="#tax">Tax</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <div class="nav-cta">
+    <a href="#" class="btn-ghost">Log In</a>
+    <a href="#" class="btn-accent">Try Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <div class="hero-tag"><span class="dot"></span> Scrab + MyFund — Unified</div>
+    <h1>Automate Your Analysis. <em>Master</em> Your Portfolio.</h1>
+    <p class="hero-sub">The complete investor's toolkit — fundamental scoring, stock screening, multi-portfolio tracking, investment strategies, and tax reporting. All in one platform.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-large accent">Start Free Trial →</a>
+      <a href="#" class="btn-large ghost">View Demo</a>
+    </div>
+  </div>
+  <div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-num">37k+</div>
+        <div class="stat-label">Companies Covered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">90+</div>
+        <div class="stat-label">Exchanges</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">75k+</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">400+</div>
+        <div class="stat-label">Financial Metrics</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features" class="animate-in">
+  <div class="section-label">Everything You Need</div>
+  <h2>Built for Serious Investors</h2>
+  <p class="section-desc">From discovering new opportunities to tracking every position and optimizing your taxes — InvestCore replaces a dozen tools with one.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon green">📊</div>
+      <div class="feature-title">Fundamental Scoring</div>
+      <div class="feature-desc">Build custom scoring models with 400+ metrics. Rank any universe of stocks by your own criteria in seconds — not hours.</div>
+      <div class="feature-tag scrab">from Scrab</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon blue">🔍</div>
+      <div class="feature-title">Advanced Stock Screener</div>
+      <div class="feature-desc">Filter 37,000+ companies by sector, country, exchange, and over 100 fundamental & technical ratios simultaneously.</div>
+      <div class="feature-tag scrab">from Scrab</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon amber">💼</div>
+      <div class="feature-title">Multi-Portfolio Tracker</div>
+      <div class="feature-desc">Manage unlimited portfolios — stocks, ETFs, funds, crypto, real estate, bonds. Group them and see unified statistics.</div>
+      <div class="feature-tag myfund">from MyFund</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon purple">🧪</div>
+      <div class="feature-title">Strategy Backtests</div>
+      <div class="feature-desc">Validate your investing strategy against 40+ years of historical data. Test GEM, AEM, Darwin+Defender, and custom models.</div>
+      <div class="feature-tag both">combined</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon red">🧾</div>
+      <div class="feature-title">Tax Calculator (PIT-38)</div>
+      <div class="feature-desc">Automatic tax optimization with loss carryforward, foreign dividends, and crypto. Export reports ready for submission.</div>
+      <div class="feature-tag myfund">from MyFund</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon teal">🔔</div>
+      <div class="feature-title">Smart Alerts</div>
+      <div class="feature-desc">Get notified when price targets hit, valuations shift, analysts revise estimates, or your scoring model changes rank.</div>
+      <div class="feature-tag both">combined</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO DEMO -->
+<section id="portfolio" class="animate-in">
+  <div class="section-label">Portfolio Management</div>
+  <h2>Your Wealth, Fully Visible</h2>
+  <p class="section-desc">Track every investment — from WSE stocks to crypto to real estate. See true returns, benchmark comparisons, and rebalancing signals.</p>
+
+  <div class="dashboard-demo">
+    <div class="dash-header">
+      <div class="dash-title">My Portfolios</div>
+      <div class="dash-actions">
+        <button class="dash-btn active">Overview</button>
+        <button class="dash-btn">Holdings</button>
+        <button class="dash-btn">Performance</button>
+        <button class="dash-btn">Tax Report</button>
+      </div>
+    </div>
+    <div class="dash-body">
+      <div class="dash-sidebar">
+        <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Portfolios</div>
+        <div class="portfolio-item active">
+          <div>
+            <div class="p-name">Main IKE</div>
+            <div class="p-val">82,450 PLN</div>
+          </div>
+          <div class="p-change positive">+12.4%</div>
+        </div>
+        <div class="portfolio-item">
+          <div>
+            <div class="p-name">US Tech</div>
+            <div class="p-val">$34,200</div>
+          </div>
+          <div class="p-change positive">+8.7%</div>
+        </div>
+        <div class="portfolio-item">
+          <div>
+            <div class="p-name">Crypto</div>
+            <div class="p-val">15,600 PLN</div>
+          </div>
+          <div class="p-change negative">-3.2%</div>
+        </div>
+        <div class="portfolio-item">
+          <div>
+            <div class="p-name">Bonds & Deposits</div>
+            <div class="p-val">40,000 PLN</div>
+          </div>
+          <div class="p-change positive">+5.1%</div>
+        </div>
+        <div class="portfolio-item">
+          <div>
+            <div class="p-name">▣ GROUP: All</div>
+            <div class="p-val">172,250 PLN</div>
+          </div>
+          <div class="p-change positive">+9.2%</div>
+        </div>
+      </div>
+      <div class="dash-main">
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">Total Value</div>
+            <div class="kpi-value" style="color:var(--accent)">82,450 PLN</div>
+            <div class="kpi-sub positive">+12.4% YTD</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Profit / Loss</div>
+            <div class="kpi-value" style="color:var(--accent)">+9,084 PLN</div>
+            <div class="kpi-sub">vs. 73,366 invested</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">vs. WIG20</div>
+            <div class="kpi-value" style="color:var(--accent2)">+4.1%</div>
+            <div class="kpi-sub">benchmark outperform</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Dividends</div>
+            <div class="kpi-value">2,340 PLN</div>
+            <div class="kpi-sub">received YTD</div>
+          </div>
+        </div>
+        <table class="holdings-table">
+          <thead>
+            <tr>
+              <th>Ticker</th>
+              <th>Company</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Value</th>
+              <th>P/L</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ticker-badge">PKN</span></td>
+              <td>PKN Orlen</td>
+              <td style="font-family:'DM Mono',monospace">120</td>
+              <td style="font-family:'DM Mono',monospace">68.40 PLN</td>
+              <td style="font-family:'DM Mono',monospace">8,208 PLN</td>
+              <td class="positive" style="font-family:'DM Mono',monospace">+14.2%</td>
+              <td>
+                <div class="score-bar-wrap">
+                  <div class="score-bar"><div class="score-bar-fill" style="width:82%;background:var(--accent)"></div></div>
+                  <div class="score-val" style="color:var(--accent)">82</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ticker-badge">CDR</span></td>
+              <td>CD Projekt</td>
+              <td style="font-family:'DM Mono',monospace">45</td>
+              <td style="font-family:'DM Mono',monospace">142.20 PLN</td>
+              <td style="font-family:'DM Mono',monospace">6,399 PLN</td>
+              <td class="negative" style="font-family:'DM Mono',monospace">-6.8%</td>
+              <td>
+                <div class="score-bar-wrap">
+                  <div class="score-bar"><div class="score-bar-fill" style="width:54%;background:var(--accent3)"></div></div>
+                  <div class="score-val" style="color:var(--accent3)">54</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ticker-badge">AAPL</span></td>
+              <td>Apple Inc.</td>
+              <td style="font-family:'DM Mono',monospace">30</td>
+              <td style="font-family:'DM Mono',monospace">$192.50</td>
+              <td style="font-family:'DM Mono',monospace">$5,775</td>
+              <td class="positive" style="font-family:'DM Mono',monospace">+22.1%</td>
+              <td>
+                <div class="score-bar-wrap">
+                  <div class="score-bar"><div class="score-bar-fill" style="width:75%;background:var(--accent)"></div></div>
+                  <div class="score-val" style="color:var(--accent)">75</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ticker-badge">PZU</span></td>
+              <td>PZU Group</td>
+              <td style="font-family:'DM Mono',monospace">200</td>
+              <td style="font-family:'DM Mono',monospace">44.80 PLN</td>
+              <td style="font-family:'DM Mono',monospace">8,960 PLN</td>
+              <td class="positive" style="font-family:'DM Mono',monospace">+8.5%</td>
+              <td>
+                <div class="score-bar-wrap">
+                  <div class="score-bar"><div class="score-bar-fill" style="width:68%;background:var(--accent)"></div></div>
+                  <div class="score-val" style="color:var(--accent)">68</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STOCK SCREENER -->
+<section id="screener" class="animate-in">
+  <div class="section-label">Stock Screener</div>
+  <h2>Find Your Next Investment</h2>
+  <p class="section-desc">Filter 37,000+ companies by any combination of fundamentals, technicals, geography, and your custom scoring model.</p>
+
+  <div class="screener-demo">
+    <div class="screener-filters">
+      <div class="filter-chip active">🌍 All Markets</div>
+      <div class="filter-chip active">P/E &lt; 20</div>
+      <div class="filter-chip active">ROE &gt; 15%</div>
+      <div class="filter-chip active">Debt/Equity &lt; 1</div>
+      <div class="filter-chip">Div Yield &gt; 3%</div>
+      <div class="filter-chip">Revenue Growth &gt; 10%</div>
+      <div class="filter-chip">+ Add Filter</div>
+    </div>
+    <table class="screener-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Company</th>
+          <th>Exchange</th>
+          <th>Sector</th>
+          <th>P/E</th>
+          <th>P/B</th>
+          <th>ROE</th>
+          <th>Div Yield</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="flag">🇵🇱</span></td>
+          <td><strong>PKN Orlen</strong> <span style="color:var(--muted);font-size:0.72rem">PKN</span></td>
+          <td style="color:var(--muted)">WSE</td>
+          <td style="color:var(--muted)">Energy</td>
+          <td style="font-family:'DM Mono',monospace">7.2</td>
+          <td style="font-family:'DM Mono',monospace">0.8</td>
+          <td style="font-family:'DM Mono',monospace;color:var(--accent)">18.4%</td>
+          <td style="font-family:'DM Mono',monospace">5.2%</td>
+          <td><span class="score-pill high">82</span></td>
+        </tr>
+        <tr>
+          <td><span class="flag">🇩🇪</span></td>
+          <td><strong>Volkswagen AG</strong> <span style="color:var(--muted);font-size:0.72rem">VOW3</span></td>
+          <td style="color:var(--muted)">XETRA</td>
+          <td style="color:var(--muted)">Auto</td>
+          <td style="font-family:'DM Mono',monospace">5.4</td>
+          <td style="font-family:'DM Mono',monospace">0.5</td>
+          <td style="font-family:'DM Mono',monospace;color:var(--accent)">16.1%</td>
+          <td style="font-family:'DM Mono',monospace">7.8%</td>
+          <td><span class="score-pill high">78</span></td>
+        </tr>
+        <tr>
+          <td><span class="flag">🇺🇸</span></td>
+          <td><strong>Johnson & Johnson</strong> <span style="color:var(--muted);font-size:0.72rem">JNJ</span></td>
+          <td style="color:var(--muted)">NYSE</td>
+          <td style="color:var(--muted)">Healthcare</td>
+          <td style="font-family:'DM Mono',monospace">14.2</td>
+          <td style="font-family:'DM Mono',monospace">5.1</td>
+          <td style="font-family:'DM Mono',monospace;color:var(--accent)">22.3%</td>
+          <td style="font-family:'DM Mono',monospace">3.1%</td>
+          <td><span class="score-pill high">74</span></td>
+        </tr>
+        <tr>
+          <td><span class="flag">🇬🇧</span></td>
+          <td><strong>Rio Tinto</strong> <span style="color:var(--muted);font-size:0.72rem">RIO</span></td>
+          <td style="color:var(--muted)">LSE</td>
+          <td style="color:var(--muted)">Materials</td>
+          <td style="font-family:'DM Mono',monospace">9.8</td>
+          <td style="font-family:'DM Mono',monospace">2.1</td>
+          <td style="font-family:'DM Mono',monospace;color:var(--accent3)">15.6%</td>
+          <td style="font-family:'DM Mono',monospace">6.4%</td>
+          <td><span class="score-pill mid">61</span></td>
+        </tr>
+        <tr>
+          <td><span class="flag">🇵🇱</span></td>
+          <td><strong>Dino Polska</strong> <span style="color:var(--muted);font-size:0.72rem">DNP</span></td>
+          <td style="color:var(--muted)">WSE</td>
+          <td style="color:var(--muted)">Retail</td>
+          <td style="font-family:'DM Mono',monospace">18.4</td>
+          <td style="font-family:'DM Mono',monospace">4.8</td>
+          <td style="font-family:'DM Mono',monospace;color:var(--accent)">28.7%</td>
+          <td style="font-family:'DM Mono',monospace">0.0%</td>
+          <td><span class="score-pill high">71</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- STRATEGIES -->
+<section id="strategies" class="animate-in">
+  <div class="section-label">Investment Strategies</div>
+  <h2>Rule-Based. Disciplined. Tested.</h2>
+  <p class="section-desc">Follow proven strategies backed by decades of historical data. Automated signals tell you when to buy, hold, or switch.</p>
+
+  <div class="strategies-grid">
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strategy-name">GEM — Global Equity Momentum</div>
+        <div class="strategy-badge trend">TREND</div>
+      </div>
+      <div class="strategy-desc">Rotates between US equities, international equities, and bonds based on momentum signals. One trade per month, maximum.</div>
+      <div class="strategy-stats">
+        <div><div class="s-stat-num positive">+14.2%</div><div class="s-stat-label">Avg Annual</div></div>
+        <div><div class="s-stat-num">30yr</div><div class="s-stat-label">Backtest</div></div>
+        <div><div class="s-stat-num" style="color:var(--accent2)">BUY</div><div class="s-stat-label">Current Signal</div></div>
+      </div>
+    </div>
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strategy-name">AEM — Advanced Equity Momentum</div>
+        <div class="strategy-badge momentum">MOMENTUM</div>
+      </div>
+      <div class="strategy-desc">Multi-asset momentum strategy with adaptive weighting. Captures equity momentum while limiting drawdown via bond allocation.</div>
+      <div class="strategy-stats">
+        <div><div class="s-stat-num positive">+16.8%</div><div class="s-stat-label">Avg Annual</div></div>
+        <div><div class="s-stat-num">20yr</div><div class="s-stat-label">Backtest</div></div>
+        <div><div class="s-stat-num" style="color:var(--accent2)">BUY</div><div class="s-stat-label">Current Signal</div></div>
+      </div>
+    </div>
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strategy-name">Darwin + Defender</div>
+        <div class="strategy-badge mixed">MIXED</div>
+      </div>
+      <div class="strategy-desc">Combines growth stock selection with a defensive mechanism that exits to cash when market conditions deteriorate.</div>
+      <div class="strategy-stats">
+        <div><div class="s-stat-num positive">+11.4%</div><div class="s-stat-label">Avg Annual</div></div>
+        <div><div class="s-stat-num">15yr</div><div class="s-stat-label">Backtest</div></div>
+        <div><div class="s-stat-num" style="color:var(--accent3)">HOLD</div><div class="s-stat-label">Current Signal</div></div>
+      </div>
+    </div>
+    <div class="strategy-card">
+      <div class="strategy-header">
+        <div class="strategy-name">Levy's Relative Strength</div>
+        <div class="strategy-badge value">VALUE+MOM</div>
+      </div>
+      <div class="strategy-desc">Ranks stocks by relative strength vs their 26-week average. Buy the strongest 10%, sell when they fall below threshold.</div>
+      <div class="strategy-stats">
+        <div><div class="s-stat-num positive">+13.1%</div><div class="s-stat-label">Avg Annual</div></div>
+        <div><div class="s-stat-num">25yr</div><div class="s-stat-label">Backtest</div></div>
+        <div><div class="s-stat-num" style="color:var(--accent2)">BUY</div><div class="s-stat-label">Current Signal</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TAX CALCULATOR -->
+<section id="tax" class="animate-in">
+  <div class="section-label">Tax Tools</div>
+  <h2>PIT-38 Made Simple</h2>
+  <p class="section-desc">Automatic tax calculation with loss carryforward, foreign exchange withholding, and crypto gains. Export ready for your tax office.</p>
+
+  <div class="tax-card">
+    <div class="tax-form">
+      <div class="form-group">
+        <label>Capital Gains (PLN)</label>
+        <input type="number" value="28400" id="gains" oninput="calcTax()"/>
+      </div>
+      <div class="form-group">
+        <label>Capital Losses (PLN)</label>
+        <input type="number" value="4200" id="losses" oninput="calcTax()"/>
+      </div>
+      <div class="form-group">
+        <label>Loss Carryforward from prev. years (PLN)</label>
+        <input type="number" value="2000" id="carryforward" oninput="calcTax()"/>
+      </div>
+      <div class="form-group">
+        <label>Foreign Dividends Received (PLN)</label>
+        <input type="number" value="1800" id="foreigndiv" oninput="calcTax()"/>
+      </div>
+      <div class="form-group">
+        <label>Foreign Tax Withheld (PLN)</label>
+        <input type="number" value="270" id="withheld" oninput="calcTax()"/>
+      </div>
+      <div class="form-group">
+        <label>Asset Type</label>
+        <select id="assettype" onchange="calcTax()">
+          <option value="stocks">Stocks & ETFs (19% Belka)</option>
+          <option value="crypto">Cryptocurrency (19%)</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.73rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:1rem;">Tax Calculation Result</div>
+      <div class="tax-result">
+        <div class="tax-result-row"><span class="label">Gross Gains</span><span class="value" id="r-gains">28,400 PLN</span></div>
+        <div class="tax-result-row"><span class="label">Losses This Year</span><span class="value negative" id="r-losses">− 4,200 PLN</span></div>
+        <div class="tax-result-row"><span class="label">Loss Carryforward</span><span class="value negative" id="r-cf">− 2,000 PLN</span></div>
+        <div class="tax-result-row"><span class="label">Net Taxable Base</span><span class="value" id="r-base">22,200 PLN</span></div>
+        <div class="tax-result-row"><span class="label">Capital Tax (19%)</span><span class="value" id="r-captax">4,218 PLN</span></div>
+        <div class="tax-result-row"><span class="label">Foreign Div. Tax</span><span class="value" id="r-divtax">72 PLN</span></div>
+        <div class="tax-result-row"><span class="label">Foreign Tax Credit</span><span class="value negative" id="r-credit">− 270 PLN</span></div>
+        <div class="tax-result-row" style="margin-top:0.5rem;">
+          <span class="label" style="color:var(--text);font-size:0.85rem;">Total Tax Due (PIT-38)</span>
+          <span class="value" style="font-size:1.1rem;color:var(--accent)" id="r-total">4,020 PLN</span>
+        </div>
+      </div>
+      <div style="margin-top:1rem;font-size:0.75rem;color:var(--muted);line-height:1.6;">
+        ⚠ This is an estimate. Consult a tax advisor for final submission. Export ready for your PIT-38 form.
+      </div>
+      <button onclick="exportTax()" style="margin-top:1rem;width:100%;" class="btn-accent">Export PIT-38 Report →</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="animate-in">
+  <div class="section-label">User Reviews</div>
+  <h2>Trusted by Thousands of Investors</h2>
+  <p class="section-desc">Real feedback from users across Poland and beyond.</p>
+
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Phenomenal platform. From simple data gathering to complex custom scoring, InvestCore leads its field. The scoring model builder alone saves me 10 hours a week."</div>
+      <div class="testimonial-author">Adrian K. — Warsaw</div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"I switched from Biznesradar and it's like upgrading from a Fiat to a Ferrari. Portfolio tracking, strategies, tax tools — genuinely the full package."</div>
+      <div class="testimonial-author">Pawel M. — Kraków</div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"I spent 200 hours building Excel spreadsheets before this. InvestCore replaced all of them and adds features I never even thought of. The GEM strategy signals alone are worth it."</div>
+      <div class="testimonial-author">Hector M. — Madrid</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="animate-in">
+  <div class="section-label">Pricing</div>
+  <h2>Cheaper Than You Think</h2>
+  <p class="section-desc">All plans include a 30-day free trial. No commitment, cancel anytime.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">~3 <span>PLN / mo</span></div>
+      <div class="plan-desc">For beginners tracking their first investments.</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> 2 portfolios</li>
+        <li><span class="check">✓</span> Basic charts & quotes</li>
+        <li><span class="check">✓</span> WSE stocks</li>
+        <li><span class="check">✓</span> Price alerts</li>
+        <li class="dim"><span>✗</span> Scoring models</li>
+        <li class="dim"><span>✗</span> Backtests</li>
+        <li class="dim"><span>✗</span> Tax report</li>
+      </ul>
+      <a href="#" class="btn-large ghost" style="display:block;text-align:center;">Get Started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="plan-name" style="color:var(--accent)">Pro ★ Most Popular</div>
+      <div class="plan-price" style="color:var(--accent)">~9 <span>PLN / mo</span></div>
+      <div class="plan-desc">The complete toolkit for active investors.</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Unlimited portfolios + groups</li>
+        <li><span class="check">✓</span> 37k+ global stocks</li>
+        <li><span class="check">✓</span> Custom scoring models</li>
+        <li><span class="check">✓</span> 400+ metrics screener</li>
+        <li><span class="check">✓</span> All strategies (GEM, AEM...)</li>
+        <li><span class="check">✓</span> Backtests (40yr history)</li>
+        <li><span class="check">✓</span> PIT-38 tax report</li>
+      </ul>
+      <a href="#" class="btn-large accent" style="display:block;text-align:center;">Start Free Trial</a>
+    </div>
+    <div class="pricing-card">
+      <div class="plan-name">Expert</div>
+      <div class="plan-price">~13 <span>PLN / mo</span></div>
+      <div class="plan-desc">For power users & portfolio professionals.</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Everything in Pro</li>
+        <li><span class="check">✓</span> API data access</li>
+        <li><span class="check">✓</span> Priority support + video calls</li>
+        <li><span class="check">✓</span> Advanced TA signals</li>
+        <li><span class="check">✓</span> Brokerage integrations</li>
+        <li><span class="check">✓</span> Public portfolios</li>
+        <li><span class="check">✓</span> Fund ranking tools</li>
+      </ul>
+      <a href="#" class="btn-large ghost" style="display:block;text-align:center;">Go Expert</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section animate-in">
+  <div class="section-label" style="text-align:center">Get Started Today</div>
+  <h2>Start Your 30-Day Free Trial</h2>
+  <p>No credit card required. No commitment. All features unlocked for 30 days.</p>
+  <div class="cta-actions">
+    <a href="#" class="btn-large accent">Create Free Account →</a>
+    <a href="#" class="btn-large ghost">Try Demo Account</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo" style="font-size:1.1rem">Invest<span>Core</span></div>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+    <a href="#">Disclaimer</a>
+    <a href="#">Blog</a>
+    <a href="#">Knowledge Base</a>
+  </div>
+  <div style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted)">© 2026 InvestCore</div>
+</footer>
+
+<script>
+// ─── TAX CALCULATOR ───
+function fmt(n) { return n.toLocaleString('pl-PL', {maximumFractionDigits:0}) + ' PLN'; }
+
+function calcTax() {
+  const gains = parseFloat(document.getElementById('gains').value)||0;
+  const losses = parseFloat(document.getElementById('losses').value)||0;
+  const cf = parseFloat(document.getElementById('carryforward').value)||0;
+  const fdiv = parseFloat(document.getElementById('foreigndiv').value)||0;
+  const withheld = parseFloat(document.getElementById('withheld').value)||0;
+
+  const net = Math.max(0, gains - losses - cf);
+  const captax = net * 0.19;
+  const polishDivTax = fdiv * 0.19;
+  const credit = Math.min(withheld, polishDivTax);
+  const divTaxDue = Math.max(0, polishDivTax - credit);
+  const total = captax + divTaxDue;
+
+  document.getElementById('r-gains').textContent = fmt(gains);
+  document.getElementById('r-losses').textContent = '− ' + fmt(losses);
+  document.getElementById('r-cf').textContent = '− ' + fmt(cf);
+  document.getElementById('r-base').textContent = fmt(net);
+  document.getElementById('r-captax').textContent = fmt(captax);
+  document.getElementById('r-divtax').textContent = fmt(polishDivTax);
+  document.getElementById('r-credit').textContent = '− ' + fmt(credit);
+  document.getElementById('r-total').textContent = fmt(total);
+}
+
+function exportTax() {
+  alert('Tax report export ready!\nIn the full app, this downloads a PDF/XLS pre-filled for PIT-38.');
+}
+
+// ─── ANIMATE ON SCROLL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+
+// ─── DASH BUTTONS ───
+document.querySelectorAll('.dash-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.closest('.dash-actions').querySelectorAll('.dash-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ─── FILTER CHIPS ───
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (!chip.textContent.includes('+ Add')) chip.classList.toggle('active');
+  });
+});
+
+// ─── PORTFOLIO ITEMS ───
+document.querySelectorAll('.portfolio-item').forEach(item => {
+  item.addEventListener('click', () => {
+    item.closest('.dash-sidebar').querySelectorAll('.portfolio-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+
+// init tax
+calcTax();
+</script>
+</body>
+</html>
