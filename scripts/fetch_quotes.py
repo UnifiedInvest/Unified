@@ -44,14 +44,27 @@ def main():
         print("No quotes parsed — leaving existing file untouched", file=sys.stderr)
         sys.exit(1)
 
+    path = os.path.join(os.path.dirname(__file__), "..", "assets", "wse.json")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    # Skip rewriting when prices are unchanged (e.g. market closed) so we don't
+    # churn commits / Pages rebuilds. Compare only the quote values, not the
+    # timestamp.
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                if json.load(f).get("quotes") == quotes:
+                    print("Quotes unchanged — skipping write")
+                    return
+        except (ValueError, OSError):
+            pass
+
     out = {
         "updated": datetime.datetime.now(datetime.timezone.utc)
                    .strftime("%Y-%m-%dT%H:%M:%SZ"),
         "source": "Stooq (WSE)",
         "quotes": quotes,
     }
-    path = os.path.join(os.path.dirname(__file__), "..", "assets", "wse.json")
-    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(f"Wrote {len(quotes)} quotes to assets/wse.json")
