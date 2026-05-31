@@ -45,6 +45,11 @@ async function refreshPrices(){
     try { const fx = await fetchJSON('https://api.frankfurter.dev/v1/latest?base=USD&symbols=PLN');
           if (fx?.rates?.PLN) USD_PLN = fx.rates.PLN; } catch(_){}
 
+    // 1b) WSE quotes — our own auto-updated JSON (a GitHub Action pulls Stooq
+    //     server-side every ~30 min, since Stooq sends no browser CORS header).
+    let wse = {};
+    try { const w = await fetchJSON('assets/wse.json?t='+Date.now()); wse = w?.quotes || {}; } catch(_){}
+
     // 2) Collect the distinct symbols we can fetch
     const all = portfolios.flatMap(p => p.holdings.map(h => ({h, cur:p.cur})));
     const cryptoIds = [...new Set(all.filter(x=>priceSource(x.h.t,x.cur)==='coingecko').map(x=>CRYPTO_IDS[x.h.t]))];
@@ -73,6 +78,8 @@ async function refreshPrices(){
         const q = fh[h.t];
         if (q){ h.price = q.c; h.day = q.dp; h.live = true; h.src='NYSE/NASDAQ'; }
         else h.live = false;
+      } else if (wse[h.t]){
+        h.price = wse[h.t].price; h.day = wse[h.t].day; h.live = true; h.src='WSE (Stooq)';
       } else { h.live = false; h.src='WSE (delayed)'; }
     }));
     lastUpdated = new Date();
@@ -100,7 +107,7 @@ function renderLiveBar(){
     <span class="lv-sep">·</span>
     <span class="lv-pill">USD/PLN ${USD_PLN.toFixed(3)}</span>
     <span class="lv-sep">·</span>
-    <span title="US stocks: Finnhub · Crypto: CoinGecko · FX: Frankfurter">Live: US stocks + crypto</span>`;
+    <span title="US stocks: Finnhub · WSE: Stooq · Crypto: CoinGecko · FX: Frankfurter">Live: US + WSE + crypto</span>`;
 }
 
 // ─── Persistence (localStorage) ────────────────────────────
