@@ -405,6 +405,12 @@
   }
 
   /* ─── RESPONSIVE ─── */
+  /* Keep wide tables/dashboard from breaking the page: constrain grid items
+     (min-width:0) and let oversized tables scroll INSIDE their own container. */
+  .dash-main, .dash-sidebar { min-width: 0; }
+  .dash-main { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .screener-demo { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; }
     .features-grid { grid-template-columns: 1fr 1fr; }
@@ -419,10 +425,28 @@
   @media (max-width: 600px) {
     nav { padding: 0 1rem; }
     .nav-links { display: none; }
-    .hero { padding: 4rem 1rem 3rem; }
+    .nav-cta .btn-ghost { display: none; }      /* keep only the primary CTA on phones */
+    .hero { padding: 5rem 1rem 3rem; }
+    .hero h1 { font-size: 2rem; line-height: 1.15; }
+    .hero-sub { font-size: 0.95rem; }
     section { padding: 3rem 1rem; }
+    h2 { font-size: 1.65rem; }
     .features-grid { grid-template-columns: 1fr; }
     .cta-section { padding: 2.5rem 1.5rem; margin: 0 1rem 3rem; }
+    /* dashboard tabs: stack + allow horizontal scroll if needed */
+    .dash-header { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .dash-actions { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .dash-btn { white-space: nowrap; flex: 0 0 auto; }
+    .kpi-row { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .kpi { padding: 0.85rem; }
+    /* readable, swipeable tables */
+    .holdings-table { min-width: 480px; }
+    .screener-table { min-width: 600px; }
+    .holdings-table th, .holdings-table td,
+    .screener-table th, .screener-table td { padding: 0.55rem 0.7rem; font-size: 0.8rem; }
+    .strategy-stats { gap: 1.25rem; }
+    .tax-card { padding: 1.25rem; }
+    .filter-chip { font-size: 0.78rem; }
   }
 
   /* ─── ANIMATE ─── */
