@@ -199,8 +199,8 @@
     font-family: 'DM Mono', monospace; font-size: 0.65rem;
     padding: 0.2rem 0.5rem; border-radius: 4px; letter-spacing: 0.08em;
   }
-  .feature-tag.scrab { background: rgba(0,229,160,0.1); color: var(--accent); }
-  .feature-tag.myfund { background: rgba(59,130,246,0.1); color: var(--accent2); }
+  .feature-tag.research { background: rgba(0,229,160,0.1); color: var(--accent); }
+  .feature-tag.portfolio { background: rgba(59,130,246,0.1); color: var(--accent2); }
   .feature-tag.both { background: rgba(245,158,11,0.1); color: var(--accent3); }
 
   /* ─── LIVE DASHBOARD ─── */
@@ -454,7 +454,7 @@
 <!-- HERO -->
 <div class="hero">
   <div>
-    <div class="hero-tag"><span class="dot"></span> Scrab + MyFund — Unified</div>
+    <div class="hero-tag"><span class="dot"></span> Research + Portfolio, Unified</div>
     <h1>Automate Your Analysis. <em>Master</em> Your Portfolio.</h1>
     <p class="hero-sub">The complete investor's toolkit — fundamental scoring, stock screening, multi-portfolio tracking, investment strategies, and tax reporting. All in one platform.</p>
     <div class="hero-actions">
@@ -495,19 +495,19 @@
       <div class="feature-icon green">📊</div>
       <div class="feature-title">Fundamental Scoring</div>
       <div class="feature-desc">Build custom scoring models with 400+ metrics. Rank any universe of stocks by your own criteria in seconds — not hours.</div>
-      <div class="feature-tag scrab">from Scrab</div>
+      <div class="feature-tag research">Research</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon blue">🔍</div>
       <div class="feature-title">Advanced Stock Screener</div>
       <div class="feature-desc">Filter 37,000+ companies by sector, country, exchange, and over 100 fundamental & technical ratios simultaneously.</div>
-      <div class="feature-tag scrab">from Scrab</div>
+      <div class="feature-tag research">Research</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon amber">💼</div>
       <div class="feature-title">Multi-Portfolio Tracker</div>
       <div class="feature-desc">Manage unlimited portfolios — stocks, ETFs, funds, crypto, real estate, bonds. Group them and see unified statistics.</div>
-      <div class="feature-tag myfund">from MyFund</div>
+      <div class="feature-tag portfolio">Portfolio</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon purple">🧪</div>
@@ -519,7 +519,7 @@
       <div class="feature-icon red">🧾</div>
       <div class="feature-title">Tax Calculator (PIT-38)</div>
       <div class="feature-desc">Automatic tax optimization with loss carryforward, foreign dividends, and crypto. Export reports ready for submission.</div>
-      <div class="feature-tag myfund">from MyFund</div>
+      <div class="feature-tag portfolio">Portfolio</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon teal">🔔</div>
@@ -998,7 +998,7 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  UNIFIED — working demo app (Scrab screener + MyFund tracker)
+//  UNIFIED — working demo app (stock screener + portfolio tracker)
 //  100% client-side. Data is illustrative/editable in-session.
 // ═══════════════════════════════════════════════════════════
 const USD_PLN = 4.00;            // fixed FX for cross-currency grouping
@@ -1008,7 +1008,7 @@ function fmtCur(n,cur){ return cur==='USD' ? '$'+Math.round(n).toLocaleString('e
 function pct(x){ return (x>=0?'+':'')+x.toFixed(1)+'%'; }
 function toPLN(n,cur){ return cur==='USD' ? n*USD_PLN : n; }
 
-// ─── MyFund: portfolio data ────────────────────────────────
+// ─── Portfolio tracker: data ───────────────────────────────
 const portfolios = [
   { id:'main', name:'Main IKE', cur:'PLN', benchmark:'WIG20', benchVs:4.1, dividends:2340, holdings:[
     {t:'PKN', n:'PKN Orlen',  qty:120, price:68.40,  cost:59.90,  score:82},
@@ -1184,7 +1184,7 @@ function addHolding(){
   renderSidebar(); renderMain();
 }
 
-// ─── Scrab: stock screener ─────────────────────────────────
+// ─── Stock screener ────────────────────────────────────────
 const companies = [
   {n:'PKN Orlen',t:'PKN',flag:'🇵🇱',ex:'WSE',sec:'Energy',pe:7.2,pb:0.8,roe:18.4,dy:5.2,de:0.6,rg:12},
   {n:'Volkswagen AG',t:'VOW3',flag:'🇩🇪',ex:'XETRA',sec:'Auto',pe:5.4,pb:0.5,roe:16.1,dy:7.8,de:0.9,rg:6},
@@ -1199,7 +1199,7 @@ const companies = [
   {n:'KGHM',t:'KGH',flag:'🇵🇱',ex:'WSE',sec:'Materials',pe:12.5,pb:0.9,roe:9.2,dy:2.1,de:0.6,rg:-2},
   {n:'Santander',t:'SAN',flag:'🇪🇸',ex:'BME',sec:'Banking',pe:6.1,pb:0.7,roe:12.4,dy:4.2,de:0.0,rg:9},
 ];
-// Fundamental score model (0-100) — the "Scrab" engine
+// Fundamental score model (0-100) — the scoring engine
 function scoreOf(c){
   const peS=clamp((25-c.pe)/25,0,1), pbS=clamp((6-c.pb)/6,0,1), roeS=clamp(c.roe/30,0,1),
         dyS=clamp(c.dy/8,0,1), deS=clamp((1.5-c.de)/1.5,0,1), rgS=clamp((c.rg+5)/40,0,1);
